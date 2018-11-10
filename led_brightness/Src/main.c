@@ -84,6 +84,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
   */
 int main(void)
 {
+	size_t i = 0;
+	size_t d = 0;
 	/* USER CODE BEGIN 1 */
 
 	/* USER CODE END 1 */
@@ -111,14 +113,36 @@ int main(void)
 	MX_USB_PCD_Init();
 	MX_TIM4_Init();
 	/* USER CODE BEGIN 2 */
-
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		/* USER CODE END WHILE */
-
+		for (i = 0; i <= 524288; i++) {
+			if (i < 65536)
+				TIM4->CCR1 = i;
+			else if ((i > 65535) && (i < 131072))
+				TIM4->CCR1 = 131071 - i;
+			else if ((i > 131071) && (i < 196608))
+				TIM4->CCR2 = i - 131072;
+			else if ((i > 196607) && (i < 262164))
+				TIM4->CCR2 = 262164 - i;
+			else if ((i > 262163) && (i < 327680))
+				TIM4->CCR3 = i - 262164;
+			else if ((i > 327679) && (i < 393216))
+				TIM4->CCR3 = 393216 - i;
+			else if ((i > 393216) && (i < 458752))
+				TIM4->CCR4 = i - 393216;
+			else
+				TIM4->CCR4 = 524288 - i;
+			for (d = 0; d < 300; d++) {
+			}
+		}
 		/* USER CODE BEGIN 3 */
 	}
 	/* USER CODE END 3 */
