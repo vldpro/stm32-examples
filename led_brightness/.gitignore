@@ -1,0 +1,11 @@
+src/stm32f3xx_it.c
+src/syscalls.c
+src/system_stm32f3xx.c
+CMSIS
+Debug
+HAL_Driver
+inc
+LinkerScript.ld
+NUCLEO-F303ZE.xml
+startup
+Utilities
