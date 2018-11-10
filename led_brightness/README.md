@@ -1,3 +1,18 @@
+
+## About timer on STM32
+### Params overview
+- `Prescaler` - divisor for timer tick frequency.
+  Timer tick frequency formula: `timer_tick_frequency = timer_default_freq / (Prescaler + 1)`.
+  `timer_default_freq` is a default freq of the bus, to which timer is connected. See docs for concrete values.
+- `CounterMode` - count up or count down.
+- `Period` - period of your impulses (aka threshold for you counter). The default value depends on bitness of your counter (16 or 32)
+
+```
+PWM_Frequency = timer_tick_frequency / (Period - 1)
+```
+
+Also, see [Origin](https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-discovery-pwm-tutorial/)
+
 ## Build
 
 ### Prerequirements
