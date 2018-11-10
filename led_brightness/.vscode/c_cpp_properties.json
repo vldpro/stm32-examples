@@ -2,7 +2,10 @@
     "configurations": [
         {
             "name": "Linux",
-            "defines": [],
+            "defines": [
+                "USE_HAL_DRIVER",
+                "STM32F303xE"
+            ],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",
             "cppStandard": "c++17",
