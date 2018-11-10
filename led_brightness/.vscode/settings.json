@@ -1,0 +1,8 @@
+{
+    "editor.formatOnSave": true,
+    "clang-format.assumeFilename": ".clang-format",
+    "files.associations": {
+        "main.h": "c",
+        "stm32f3xx_hal.h": "c"
+    }
+}
