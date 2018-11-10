@@ -1,4 +1,17 @@
-# Docs and specs for STM32F303ZE
+## Build
+
+### Prerequirements
+
+- Docker
+
+### Steps
+
+```
+$ ./build.sh
+```
+
+
+## Docs and specs for STM32F303ZE
 
 - Product [Specification](https://www.st.com/resource/en/datasheet/stm32f303ze.pdf):
   - page 54: Alternate functions mapping
