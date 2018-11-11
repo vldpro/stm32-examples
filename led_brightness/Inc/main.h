@@ -78,6 +78,9 @@
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 
+extern RTC_HandleTypeDef hrtc;
+extern TIM_HandleTypeDef htim4;
+
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);
 void MX_RTC_Init(void);
