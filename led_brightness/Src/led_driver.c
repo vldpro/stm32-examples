@@ -13,7 +13,7 @@ extern void SystemClock_Config(void);
 
 // Private defines
 
-#define AVAILABLE_LEDS 4
+#define AVAILABLE_LEDS 8
 
 #define LED_CHANNELS_PER_TIM 4
 #define LED_DEFAULT_BRIGHTNESS 100
@@ -56,14 +56,31 @@ static void init_components(void)
 	MX_USART3_UART_Init();
 	MX_USB_PCD_Init();
 	MX_TIM4_Init();
+	MX_TIM2_Init();
+}
+
+static void start_pwm_tim(TIM_HandleTypeDef *tim)
+{
+	HAL_TIM_PWM_Start(tim, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(tim, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(tim, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(tim, TIM_CHANNEL_4);
 }
 
 static void start_pwm(void)
 {
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+	start_pwm_tim(&htim4);
+	start_pwm_tim(&htim2);
+}
+
+static void init_leds_tim(TIM_HandleTypeDef *tim, struct leds_list *leds, unsigned int led_list_offset)
+{
+	for (size_t chan = 1; chan <= LED_CHANNELS_PER_TIM; chan++) {
+		led_t *led = &(leds->leds[led_list_offset]);
+		*led = LED_DEFAULT_CONSTRUCTOR(tim, chan);
+		led_set_brightness(led, LED_DEFAULT_BRIGHTNESS);
+		led_list_offset++;
+	}
 }
 
 static void init_leds(struct leds_list *leds)
@@ -71,13 +88,8 @@ static void init_leds(struct leds_list *leds)
 	leds->sz = AVAILABLE_LEDS;
 	leds->leds = malloc(AVAILABLE_LEDS * sizeof(struct led));
 
-	for (size_t chan = 1; chan <= LED_CHANNELS_PER_TIM; chan++) {
-		size_t idx = chan - 1;
-		led_t *led = &(leds->leds[idx]);
-
-		*led = LED_DEFAULT_CONSTRUCTOR(&htim4, chan);
-		led_set_brightness(led, LED_DEFAULT_BRIGHTNESS);
-	}
+	init_leds_tim(&htim2, leds, 0);
+	init_leds_tim(&htim4, leds, LED_CHANNELS_PER_TIM);
 }
 
 static void deinit_leds(struct leds_list *leds)
