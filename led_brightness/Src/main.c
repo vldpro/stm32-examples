@@ -45,12 +45,10 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-RTC_HandleTypeDef hrtc;
-
-TIM_HandleTypeDef htim4;
+extern RTC_HandleTypeDef hrtc;
+extern TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart3;
-
 PCD_HandleTypeDef hpcd_USB_FS;
 
 /* USER CODE BEGIN PV */
