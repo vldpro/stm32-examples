@@ -1,7 +1,11 @@
 #include "led_driver.h"
 #include "main.h"
-#include "stm32f3xx_hal.h"
 #include <malloc.h>
+
+// External variables
+
+extern RTC_HandleTypeDef hrtc;
+extern TIM_HandleTypeDef htim4;
 
 // Private defines
 
@@ -13,10 +17,10 @@
 #define PWM_CCR_FROM_DUTY_CYCLE(percent) (((PWM_IMPULSE_PERIOD + 1) * (percent - 1)) / 100)
 #define PWM_DUTY_CYCLE_FROM_CCR(ccr_value) ((ccr_value * 100) / (PWM_IMPULSE_PERIOD + 1) + 1)
 
-#define LED_DEFAULT_CONSTRUCTOR(timer_ptr, channel)                                                                    \
+#define LED_DEFAULT_CONSTRUCTOR(timer_ptr, chan)                                                                       \
 	(led_t)                                                                                                        \
 	{                                                                                                              \
-		.brightness = 100, .timer = (timer_ptr), .channel = channel                                            \
+		.brightness = 100, .timer = (timer_ptr), .channel = (chan)                                             \
 	}
 
 // Public structures implementation
@@ -27,7 +31,7 @@ struct led {
 	char channel;
 };
 
-struct led_list {
+struct leds_list {
 	struct led *leds;
 	int sz;
 };
@@ -57,18 +61,18 @@ static void start_pwm(void)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 }
 
-static void init_leds(struct led_list *leds)
+static void init_leds(struct leds_list *leds)
 {
 	leds->sz = AVAILABLE_LEDS;
 	leds->leds = malloc(AVAILABLE_LEDS * sizeof(struct led));
 
-	for (size_t chan = 1; i <= LED_CHANNELS_PER_TIM; chan++) {
+	for (size_t chan = 1; chan <= LED_CHANNELS_PER_TIM; chan++) {
 		size_t idx = chan - 1;
-		leds->leds[idx] = LED_DEFAULT_CONSTRUCTOR(htim4, chan);
+		leds->leds[idx] = LED_DEFAULT_CONSTRUCTOR(&htim4, chan);
 	}
 }
 
-static void deinit_leds(struct led_list *leds)
+static void deinit_leds(struct leds_list *leds)
 {
 	free(leds->leds);
 }
@@ -120,21 +124,21 @@ leds_list_t *leds_new(void)
 	return list;
 }
 
-void leds_delete(led_list_t *leds)
+void leds_delete(leds_list_t *leds)
 {
 	deinit_leds(leds);
 	free(leds);
 }
 
-void leds_size(led_list_t *leds)
+unsigned int leds_size(leds_list_t *leds)
 {
 	return leds->sz;
 }
 
-void leds_foreach(led_list_t *leds, led_handler_fn led_handler)
+void leds_foreach(leds_list_t *leds, led_handler_fn led_handler)
 {
 	for (size_t i = 0; i < leds->sz; i++) {
-		led_t *led = leds->leds[i];
+		led_t *led = &(leds->leds[i]);
 		led_handler(led);
 	}
 }

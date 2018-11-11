@@ -42,6 +42,7 @@
 #define __MAIN_H__
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f3xx_hal.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -77,9 +78,6 @@
 #define SWO_GPIO_Port GPIOB
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
-
-extern RTC_HandleTypeDef hrtc;
-extern TIM_HandleTypeDef htim4;
 
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);

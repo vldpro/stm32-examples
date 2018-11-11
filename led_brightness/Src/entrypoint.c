@@ -9,7 +9,7 @@ void set_half_brightness(led_t *led)
 
 void main(void)
 {
-	led_list_t *leds = leds_new();
+	leds_list_t *leds = leds_new();
 	leds_foreach(leds, set_half_brightness);
 
 	for (;;) {
