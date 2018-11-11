@@ -58,14 +58,6 @@ PCD_HandleTypeDef hpcd_USB_FS;
 
 /* USER CODE END PV */
 
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_RTC_Init(void);
-static void MX_USART3_UART_Init(void);
-static void MX_USB_PCD_Init(void);
-static void MX_TIM4_Init(void);
-
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN PFP */
@@ -82,6 +74,9 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
   *
   * @retval None
   */
+#define DRV_IMPULSE_PERIOD 65535
+#define DRV_DUTY_CYCLE(percent) (((DRV_IMPULSE_PERIOD + 1) * (percent - 1)) / 100)
+
 int main(void)
 {
 	size_t i = 0;
@@ -121,8 +116,7 @@ int main(void)
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	while (1) {
-		/* USER CODE END WHILE */
+	/*while (1) {
 		for (i = 0; i <= 524288; i++) {
 			if (i < 65536)
 				TIM4->CCR1 = i;
@@ -143,8 +137,7 @@ int main(void)
 			for (d = 0; d < 300; d++) {
 			}
 		}
-		/* USER CODE BEGIN 3 */
-	}
+	}*/
 	/* USER CODE END 3 */
 }
 
@@ -208,7 +201,7 @@ void SystemClock_Config(void)
 }
 
 /* RTC init function */
-static void MX_RTC_Init(void)
+void MX_RTC_Init(void)
 {
 	/* USER CODE BEGIN RTC_Init 0 */
 
@@ -233,7 +226,7 @@ static void MX_RTC_Init(void)
 }
 
 /* TIM4 init function */
-static void MX_TIM4_Init(void)
+void MX_TIM4_Init(void)
 {
 	TIM_ClockConfigTypeDef sClockSourceConfig;
 	TIM_MasterConfigTypeDef sMasterConfig;
@@ -288,7 +281,7 @@ static void MX_TIM4_Init(void)
 }
 
 /* USART3 init function */
-static void MX_USART3_UART_Init(void)
+void MX_USART3_UART_Init(void)
 {
 	huart3.Instance = USART3;
 	huart3.Init.BaudRate = 38400;
@@ -306,7 +299,7 @@ static void MX_USART3_UART_Init(void)
 }
 
 /* USB init function */
-static void MX_USB_PCD_Init(void)
+void MX_USB_PCD_Init(void)
 {
 	hpcd_USB_FS.Instance = USB;
 	hpcd_USB_FS.Init.dev_endpoints = 8;
@@ -328,7 +321,7 @@ static void MX_USB_PCD_Init(void)
         * EVENT_OUT
         * EXTI
 */
-static void MX_GPIO_Init(void)
+void MX_GPIO_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 

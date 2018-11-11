@@ -78,6 +78,13 @@
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 
+void SystemClock_Config(void);
+void MX_GPIO_Init(void);
+void MX_RTC_Init(void);
+void MX_USART3_UART_Init(void);
+void MX_USB_PCD_Init(void);
+void MX_TIM4_Init(void);
+
 /* ########################## Assert Selection ############################## */
 /**
   * @brief Uncomment the line below to expanse the "assert_param" macro in the 
@@ -90,7 +97,7 @@
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 void _Error_Handler(char *, int);
 
