@@ -12,6 +12,7 @@ extern TIM_HandleTypeDef htim4;
 #define AVAILABLE_LEDS 4
 
 #define LED_CHANNELS_PER_TIM 4
+#define LED_DEFAULT_BRIGHTNESS 100
 
 #define PWM_IMPULSE_PERIOD 65535
 #define PWM_CCR_FROM_DUTY_CYCLE(percent) (((PWM_IMPULSE_PERIOD + 1) * (percent - 1)) / 100)
@@ -20,7 +21,7 @@ extern TIM_HandleTypeDef htim4;
 #define LED_DEFAULT_CONSTRUCTOR(timer_ptr, chan)                                                                       \
 	(led_t)                                                                                                        \
 	{                                                                                                              \
-		.brightness = 100, .timer = (timer_ptr), .channel = (chan)                                             \
+		.brightness = LED_DEFAULT_BRIGHTNESS, .timer = (timer_ptr), .channel = (chan)                          \
 	}
 
 // Public structures implementation
@@ -68,7 +69,10 @@ static void init_leds(struct leds_list *leds)
 
 	for (size_t chan = 1; chan <= LED_CHANNELS_PER_TIM; chan++) {
 		size_t idx = chan - 1;
-		leds->leds[idx] = LED_DEFAULT_CONSTRUCTOR(&htim4, chan);
+		led_t *led = &(leds->leds[idx]);
+
+		*led = LED_DEFAULT_CONSTRUCTOR(&htim4, chan);
+		led_set_brightness(led, LED_DEFAULT_BRIGHTNESS);
 	}
 }
 
@@ -92,22 +96,6 @@ static void timer_set_ccr(TIM_HandleTypeDef *tim, char chan, int ccr_value)
 	case 4:
 		tim->Instance->CCR4 = ccr_value;
 		break;
-	}
-}
-
-static int timer_get_ccr(TIM_HandleTypeDef *tim, char chan)
-{
-	switch (chan) {
-	case 1:
-		return tim->Instance->CCR1;
-	case 2:
-		return tim->Instance->CCR2;
-	case 3:
-		return tim->Instance->CCR3;
-	case 4:
-		return tim->Instance->CCR4;
-	default:
-		return 0;
 	}
 }
 
@@ -147,10 +135,10 @@ void led_set_brightness(led_t *led, unsigned int percent)
 {
 	int ccr = PWM_CCR_FROM_DUTY_CYCLE(percent);
 	timer_set_ccr(led->timer, led->channel, ccr);
+	led->brightness = percent;
 }
 
 unsigned int led_get_brightness(led_t *led)
 {
-	int ccr = timer_get_ccr(led->timer, led->channel);
-	return PWM_DUTY_CYCLE_FROM_CCR(ccr);
+	return led->brightness;
 }
