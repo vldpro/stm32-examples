@@ -1,3 +1,24 @@
+# Animation with brightness on LEDs
+
+## How to use 
+
+### Prerequirements
+
+- Docker
+- st-link
+
+### Build 
+
+```
+make -f Makefile.util build-proj
+```
+
+### Flash
+Connect your device via USB and:
+```
+make -f Makefile.util flash
+```
+
 
 ## About timer on STM32
 ### Params overview
@@ -12,19 +33,6 @@ PWM_Frequency = timer_tick_frequency / (Period - 1)
 ```
 
 Also, see [Origin](https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-discovery-pwm-tutorial/)
-
-## Build
-
-### Prerequirements
-
-- Docker
-
-### Steps
-
-```
-$ ./build.sh
-```
-
 
 ## Docs and specs for STM32F303ZE
 
