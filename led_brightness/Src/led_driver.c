@@ -1,11 +1,15 @@
 #include "led_driver.h"
-#include "main.h"
+#include "stm32f3xx_hal.h"
+#include "rtc.h"
+#include "tim.h"
+#include "usart.h"
+#include "usb.h"
+#include "gpio.h"
 #include <malloc.h>
 
 // External variables
 
-extern RTC_HandleTypeDef hrtc;
-extern TIM_HandleTypeDef htim4;
+extern void SystemClock_Config(void);
 
 // Private defines
 
