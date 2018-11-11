@@ -20,6 +20,19 @@ Connect your device via USB and:
 make -f Makefile.util flash
 ```
 
+## Pins-LEDs mapping (STM32F303ZETx)
+
+| TIMER    | Pin  | LED  |
+| -------- | ---- | ---- |
+| TIM2_CH1 | PA0  | LED1 |
+| TIM2_CH2 | PA1  | LED2 |
+| TIM2_CH3 | PA2  | LED3 |
+| TIM2_CH4 | PA3  | LED4 |
+| TIM4_CH1 | PD12 | LED5 |
+| TIM4_CH2 | PD13 | LED6 |
+| TIM4_CH3 | PD14 | LED7 |
+| TIM4_CH4 | PF6  | LED8 |
+
 
 ## About timer on STM32
 ### Params overview
