@@ -1,4 +1,5 @@
 # Animation with brightness on LEDs
+> Animation with 8 LEDs via brightness range
 
 ## How to use 
 
