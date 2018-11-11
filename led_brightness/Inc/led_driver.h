@@ -16,13 +16,13 @@ typedef void(led_handler_fn)(led_t *);
  * @brief Initialize led_list and driver
  * @param leds
  */
-void leds_init(led_list_t *leds);
+led_list_t *leds_new(void);
 
 /**
  * @brief Deinitialize leds and driver
  * @param leds 
  */
-void leds_deinit(led_list_t *leds);
+void leds_delete(led_list_t *leds);
 
 /**
  * @brief Get number of available leds

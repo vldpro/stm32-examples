@@ -109,17 +109,21 @@ static int timer_get_ccr(TIM_HandleTypeDef *tim, char chan)
 
 // Public functions implementation
 
-void leds_init(led_list_t *leds)
+leds_list_t *leds_new(void)
 {
 	init_hal();
 	init_components();
-	init_leds(leds);
 	start_pwm();
+
+	leds_list_t *list = malloc(sizeof(leds_list_t));
+	init_leds(list);
+	return list;
 }
 
-void leds_deinit(led_list_t *leds)
+void leds_delete(led_list_t *leds)
 {
 	deinit_leds(leds);
+	free(leds);
 }
 
 void leds_size(led_list_t *leds)
