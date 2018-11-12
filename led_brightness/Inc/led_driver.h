@@ -46,7 +46,7 @@ void leds_foreach(leds_list_t *leds, led_handler_fn led_handler);
  * @param idx 
  * @return led_t* 
  */
-led_t *leds_at(unsigned int idx);
+led_t *leds_at(leds_list_t *leds, unsigned int idx);
 /**
  * @brief Set brightness for led
  * @param led
