@@ -1,6 +1,9 @@
 #ifndef LED_DRIVER_H
 #define LED_DRIVER_H
 
+#define LED_MAX_BRIGHTNESS 100
+#define LED_MIN_BRIGHTNESS 1
+
 /**
  * @brief Represents the one led
  */
@@ -37,6 +40,13 @@ unsigned int leds_size(leds_list_t *leds);
  */
 void leds_foreach(leds_list_t *leds, led_handler_fn led_handler);
 
+/**
+ * @brief 
+ * 
+ * @param idx 
+ * @return led_t* 
+ */
+led_t *leds_at(unsigned int idx);
 /**
  * @brief Set brightness for led
  * @param led
