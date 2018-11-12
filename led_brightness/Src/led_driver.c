@@ -141,7 +141,7 @@ unsigned int leds_size(leds_list_t *leds)
 
 led_t *leds_at(leds_list_t *leds, unsigned int idx)
 {
-	return leds->leds[idx];
+	return &(leds->leds[idx]);
 }
 
 void leds_foreach(leds_list_t *leds, led_handler_fn led_handler)
