@@ -29,7 +29,6 @@ static void brightness_shift(leds_list_t *leds)
 		unsigned int tmp = led_get_brightness(cur_led);
 		led_set_brightness(cur_led, prev_br);
 		prev_br = tmp;
-		delay(100);
 	}
 }
 
@@ -40,5 +39,6 @@ void main(void)
 
 	for (;;) {
 		brightness_shift(leds);
+		delay(300);
 	}
 }
