@@ -52,6 +52,21 @@ led_t *leds_at(leds_list_t *leds, unsigned int idx);
  * @param led
  * @param percent - value in 1..100
  */
+
+/**
+ * @brief 
+ * 
+ * @param leds 
+ * @param num 
+ */
+void leds_display_number(leds_list_t *leds, unsigned char num);
+
+/**
+ * @brief 
+ * 
+ * @param led 
+ * @param percent 
+ */
 void led_set_brightness(led_t *led, unsigned int percent);
 
 /**

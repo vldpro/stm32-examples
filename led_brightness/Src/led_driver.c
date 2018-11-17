@@ -5,6 +5,7 @@
 #include "usart.h"
 #include "usb.h"
 #include "gpio.h"
+#include "utils.h"
 #include <malloc.h>
 
 // External variables
@@ -137,6 +138,14 @@ void leds_delete(leds_list_t *leds)
 unsigned int leds_size(leds_list_t *leds)
 {
 	return leds->sz;
+}
+
+void leds_display_number(leds_list_t *leds, unsigned char num)
+{
+	for (unsigned char i = 0; i < leds->sz; i++) {
+		unsigned char br = bit_at(num, i) ? LED_MAX_BRIGHTNESS : LED_MIN_BRIGHTNESS;
+		led_set_brightness(leds->leds + i, br);
+	}
 }
 
 led_t *leds_at(leds_list_t *leds, unsigned int idx)
