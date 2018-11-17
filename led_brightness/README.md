@@ -33,6 +33,12 @@ make -f Makefile.util flash
 | TIM4_CH3 | PD14 | LED7 |
 | TIM4_CH4 | PF6  | LED8 |
 
+## Input buttons
+| Btn name       | Pin  | Desription                              |
+| -------------- | ---- | --------------------------------------- |
+| Switch button  | PC13 | Switch from one view to another         |
+| Counter button | PA10 | Used for count number of user's presses |
+
 
 ## About timer on STM32
 ### Params overview
@@ -49,6 +55,8 @@ PWM_Frequency = timer_tick_frequency / (Period - 1)
 Also, see [Origin](https://stm32f4-discovery.net/2014/05/stm32f4-stm32f429-discovery-pwm-tutorial/)
 
 ## Docs and specs for STM32F303ZE
+
+- About [debouncing] (http://www.emcu.it/STM32/STM32Discovery-Debounce/STM32Discovery-InputWithDebounce_Output_UART_SPI_SysTick.html)
 
 - Product [Specification](https://www.st.com/resource/en/datasheet/stm32f303ze.pdf):
   - page 54: Alternate functions mapping
