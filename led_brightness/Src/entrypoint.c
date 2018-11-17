@@ -45,16 +45,6 @@ static void brightness_shift(leds_list_t *leds)
     }
 }
 
-// Callback for external interrupt. Triggers view switch
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    /*if (GPIO_Pin == GPIO_PIN_13)
-        module_scope.current_view =
-            module_scope.current_view == VIEW_BTN_PRESSES_COUNT ?
-                VIEW_BRIGHTNESS_ANIMATION :
-                VIEW_BTN_PRESSES_COUNT;*/
-}
-
 static void handle_btn_press_on(GPIO_TypeDef *GPIOx,
                                 uint16_t pin,
                                 btn_press_fn callback,
