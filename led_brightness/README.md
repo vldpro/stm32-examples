@@ -20,6 +20,11 @@ Connect your device via USB and:
 make -f Makefile.util flash
 ```
 
+### STM32CubeMX
+
+Simply open the ioc file with STM32CubeMX
+
+
 ## Pins-LEDs mapping (STM32F303ZETx)
 
 | TIMER    | Pin  | LED  |
