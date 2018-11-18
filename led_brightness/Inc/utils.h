@@ -1,5 +1,5 @@
 #ifndef UTILS_H
-#define UTILS_h
+#define UTILS_H
 
 struct leds_list;
 
