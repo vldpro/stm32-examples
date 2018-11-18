@@ -56,8 +56,8 @@ static void init_leds(void)
 {
     TIM_HandleTypeDef **tims =
         malloc(HW_AVAILABLE_TIMS * sizeof(TIM_HandleTypeDef *));
-    tims[0] = &htim4;
-    tims[1] = &htim2;
+    tims[0] = &htim2;
+    tims[1] = &htim4;
 
     drivers_initial_data.leds_initial =
         (leds_initial_t){ .tims = (void *)tims, .sz = HW_AVAILABLE_TIMS };
