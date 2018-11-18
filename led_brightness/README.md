@@ -24,6 +24,24 @@ make -f Makefile.util flash
 
 Simply open the ioc file with STM32CubeMX
 
+## Structure
+
+- `led_driver` - driver for leds enable/disable and brightness increase/decrease
+    - Inc/led_driver.h
+    - Src/led_driver.c
+
+- `btns_driver` - driver for btns. Used to register callbacks and debouncing
+    - Inc/btns_driver.h
+    - Src/btns_driver.c
+
+- `utils` - general purpose functions
+    - Inc/utils.h
+    - Src/utils.c
+
+- `entrypoint` - source file with main logic and `main()` function
+    - Src/entrypoint.c
+
+All other sources/headers was generate by STM32CubeMX
 
 ## Pins-LEDs mapping (STM32F303ZETx)
 
