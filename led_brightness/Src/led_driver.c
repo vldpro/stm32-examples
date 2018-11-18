@@ -58,10 +58,10 @@ static void start_pwm_tim(TIM_HandleTypeDef *tim)
 static void start_pwm(struct leds_initial *init_data)
 {
     uint32_t sz = init_data->sz;
-    for (uint32_t i = 0; i < sz; i++) {
-        TIM_HandleTypeDef **tims = (TIM_HandleTypeDef **)init_data->tims;
+    TIM_HandleTypeDef **tims = (TIM_HandleTypeDef **)(init_data->tims);
+
+    for (uint32_t i = 0; i < sz; i++)
         start_pwm_tim(tims[i]);
-    }
 }
 
 static void init_leds_tim(TIM_HandleTypeDef *tim,
@@ -78,12 +78,12 @@ static void init_leds_tim(TIM_HandleTypeDef *tim,
 
 static void init_leds(struct leds_list *leds, struct leds_initial *init_data)
 {
+    TIM_HandleTypeDef **tims = (TIM_HandleTypeDef **)(init_data->tims);
     leds->sz = init_data->sz * LED_CHANNELS_PER_TIM;
     leds->leds = malloc(leds->sz * sizeof(struct led));
 
     for (uint32_t i = 0; i < leds->sz; i++) {
         uint32_t offset = LED_CHANNELS_PER_TIM * i;
-        TIM_HandleTypeDef **tims = (TIM_HandleTypeDef **)(init_data->tims);
         init_leds_tim(tims[i], leds, offset);
     }
 }
