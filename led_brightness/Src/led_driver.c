@@ -82,7 +82,7 @@ static void init_leds(struct leds_list *leds, struct leds_initial *init_data)
     leds->sz = init_data->sz * LED_CHANNELS_PER_TIM;
     leds->leds = malloc(leds->sz * sizeof(struct led));
 
-    for (uint32_t i = 0; i < leds->sz; i++) {
+    for (uint32_t i = 0; i < init_data->sz; i++) {
         uint32_t offset = LED_CHANNELS_PER_TIM * i;
         init_leds_tim(tims[i], leds, offset);
     }
