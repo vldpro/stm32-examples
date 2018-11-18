@@ -68,7 +68,8 @@ Src/rtc.c \
 Src/tim.c \
 Src/usart.c \
 Src/usb.c \
-Src/btns_driver.c
+Src/btns_driver.c \
+Src/hardware_init.c
 
 # ASM sources
 ASM_SOURCES =  \
