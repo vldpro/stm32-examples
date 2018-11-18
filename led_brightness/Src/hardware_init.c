@@ -74,3 +74,8 @@ btns_initial_t *hw_btns_initial_data(void)
 {
     return &(drivers_initial_data.btns_initial);
 }
+
+leds_initial_t *hw_leds_initial_data(void)
+{
+    return &(drivers_initial_data.leds_initial);
+}
