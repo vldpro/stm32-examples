@@ -1,12 +1,6 @@
 #include "led_driver.h"
 #include "initial_data.h"
 #include "stm32f3xx_hal.h"
-#include "rtc.h"
-#include "tim.h"
-#include "usart.h"
-#include "usb.h"
-#include "gpio.h"
-#include "utils.h"
 #include <malloc.h>
 
 // External variables
@@ -83,7 +77,7 @@ static void init_leds_tim(TIM_HandleTypeDef *tim,
 
 static void init_leds(struct leds_list *leds, struct leds_initial *init_data)
 {
-    leds->sz = init_data->sz;
+    leds->sz = init_data->sz * LED_CHANNELS_PER_TIM;
     leds->leds = malloc(leds->sz * sizeof(struct led));
 
     for (uint32_t i = 0; i < leds->sz; i++) {
