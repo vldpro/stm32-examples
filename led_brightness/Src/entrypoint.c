@@ -1,4 +1,5 @@
 #include "led_driver.h"
+#include "btns_driver.h"
 #include "stm32f3xx_hal.h"
 #include "utils.h"
 
@@ -7,6 +8,9 @@
 
 #define VIEW_BRIGHTNESS_ANIMATION 0
 #define VIEW_BTN_PRESSES_COUNT 1
+
+#define BTN_COUNTER_ID 0
+#define BTN_SWITCH_ID 1
 
 typedef void (*btn_press_fn)(void);
 
@@ -45,20 +49,6 @@ static void brightness_shift(leds_list_t *leds)
     }
 }
 
-static void handle_btn_press_on(GPIO_TypeDef *GPIOx,
-                                uint16_t pin,
-                                btn_press_fn callback,
-                                unsigned int *ticks)
-{
-    if (HAL_GPIO_ReadPin(GPIOx, pin) == GPIO_PIN_SET) {
-        (*ticks)++;
-    } else {
-        if (*ticks > TICKS_TRESHOLD)
-            callback();
-        (*ticks) = 0;
-    }
-}
-
 void on_switch_btn_pressed(void)
 {
     module_scope.current_view =
@@ -70,24 +60,6 @@ void on_switch_btn_pressed(void)
 void on_counter_btn_pressed(void)
 {
     module_scope.btn_press_cnt++;
-}
-
-// Callback for systick. Counts button's presses
-void HAL_SYSTICK_Callback(void)
-{
-    static unsigned int switch_btn_ticks = 0;
-    static unsigned int counter_btn_ticks = 0;
-
-    handle_btn_press_on(
-        GPIOA, GPIO_PIN_10, on_counter_btn_pressed, &counter_btn_ticks);
-    handle_btn_press_on(
-        GPIOC, GPIO_PIN_13, on_switch_btn_pressed, &switch_btn_ticks);
-}
-
-static void soft_delay(unsigned long i)
-{
-    for (; i--;) {
-    }
 }
 
 static void btn_presses_cnt_view(leds_list_t *leds)
@@ -111,9 +83,20 @@ static void brightness_animation_view(leds_list_t *leds)
     }
 }
 
+
+static void btns_init_and_set_callbacks(void) 
+{
+    btns_init();
+    btn_t* counter_btn = btns_at(BTN_COUNTER_ID);
+    btn_t* switch_btn = btns_at(BTN_SWITCH_ID);
+    btn_register_press_listener(counter_btn, on_counter_btn_pressed);
+    btn_register_press_listener(switch_btn, on_switch_btn_pressed);
+}
+
 void main(void)
 {
     leds_driver_init();
+    btns_init_and_set_callbacks();
     module_scope.leds = leds_new();
 
     for (;;) {

@@ -67,7 +67,8 @@ Src/gpio.c \
 Src/rtc.c \
 Src/tim.c \
 Src/usart.c \
-Src/usb.c
+Src/usb.c \
+Src/btns_driver.c
 
 # ASM sources
 ASM_SOURCES =  \
