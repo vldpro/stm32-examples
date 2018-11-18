@@ -4,7 +4,6 @@
 #include "utils.h"
 
 #define LED_BRIGHTNESS_DELTA 19
-#define TICKS_TRESHOLD 50
 
 #define VIEW_BRIGHTNESS_ANIMATION 0
 #define VIEW_BTN_PRESSES_COUNT 1
