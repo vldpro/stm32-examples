@@ -11,6 +11,8 @@
 #define HW_AVAILABLE_BTNS 2
 #define HW_AVAILABLE_TIMS 2
 
+void SystemClock_Config(void);
+
 // Module's private data
 
 static struct {
