@@ -8,6 +8,7 @@
  * @brief Represents the one led
  */
 typedef struct led led_t;
+struct led_initial;
 
 /**
  * @brief A list of leds
@@ -19,13 +20,13 @@ typedef void(led_handler_fn)(led_t *);
  * @brief Intialize the leds hardware
  * 
  */
-void leds_driver_init(void);
+void leds_driver_init(struct led_initial *init_data);
 
 /**
  * @brief Initialize led_list and driver
  * @param leds
  */
-leds_list_t *leds_new(void);
+leds_list_t *leds_get(void);
 
 /**
  * @brief Deinitialize leds and driver

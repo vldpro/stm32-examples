@@ -1,4 +1,5 @@
 #include "led_driver.h"
+#include "initial_data.h"
 #include "stm32f3xx_hal.h"
 #include "rtc.h"
 #include "tim.h"
@@ -45,6 +46,10 @@ struct leds_list {
     int sz;
 };
 
+static struct {
+    leds_list_t leds_list;
+} driver_scope;
+
 // Private functions
 
 static void start_pwm_tim(TIM_HandleTypeDef *tim)
@@ -55,10 +60,13 @@ static void start_pwm_tim(TIM_HandleTypeDef *tim)
     HAL_TIM_PWM_Start(tim, TIM_CHANNEL_4);
 }
 
-static void start_pwm(void)
+static void start_pwm(struct leds_initial *init_data)
 {
-    start_pwm_tim(&htim4);
-    start_pwm_tim(&htim2);
+    uint32_t sz = init_data->sz;
+    for (uint32_t i = 0; i < sz; i++) {
+        TIM_HandleTypeDef *tims = init_data->tims;
+        start_pwm_tim(tims + i);
+    }
 }
 
 static void init_leds_tim(TIM_HandleTypeDef *tim,
@@ -73,13 +81,16 @@ static void init_leds_tim(TIM_HandleTypeDef *tim,
     }
 }
 
-static void init_leds(struct leds_list *leds)
+static void init_leds(struct leds_list *leds, struct leds_initial *init_data)
 {
-    leds->sz = AVAILABLE_LEDS;
-    leds->leds = malloc(AVAILABLE_LEDS * sizeof(struct led));
+    leds->sz = init_data->sz;
+    leds->leds = malloc(leds->sz * sizeof(struct led));
 
-    init_leds_tim(&htim2, leds, 0);
-    init_leds_tim(&htim4, leds, LED_CHANNELS_PER_TIM);
+    for (uint32_t i = 0; i < leds->sz; i++) {
+        uint32_t offset = LED_CHANNELS_PER_TIM * i;
+        TIM_HandleTypeDef *tims = init_data->tims;
+        init_leds_tim(tims + i, leds, offset);
+    }
 }
 
 static void deinit_leds(struct leds_list *leds)
@@ -107,16 +118,15 @@ static void timer_set_ccr(TIM_HandleTypeDef *tim, char chan, int ccr_value)
 
 // Public functions implementation
 
-void leds_driver_init(void)
+void leds_driver_init(struct led_initial *init_data)
 {
-    start_pwm();
+    start_pwm(init_data);
+    init_leds(&(driver_scope.leds_list), init_data);
 }
 
-leds_list_t *leds_new(void)
+leds_list_t *leds_get(void)
 {
-    leds_list_t *list = malloc(sizeof(leds_list_t));
-    init_leds(list);
-    return list;
+    return &(driver_scope.leds_list);
 }
 
 void leds_delete(leds_list_t *leds)
