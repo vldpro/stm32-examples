@@ -70,6 +70,7 @@ void hw_init(void)
     init_hal();
     init_components();
     init_btns();
+    init_leds();
 }
 
 btns_initial_t *hw_btns_initial_data(void)
