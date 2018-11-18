@@ -1,6 +1,7 @@
 #include "led_driver.h"
 #include "btns_driver.h"
 #include "utils.h"
+#include "hardware_init.h"
 #include <malloc.h>
 
 #define LED_BRIGHTNESS_DELTA 13
@@ -88,15 +89,19 @@ static void leds_init_and_set(void)
 
 static void btns_init_and_set_callbacks(void)
 {
-    btns_init();
+    btns_initial_t *init_data = hw_btns_initial_data();
+    btns_init(init_data);
+
     btn_t *counter_btn = btns_at(BTN_COUNTER_ID);
     btn_t *switch_btn = btns_at(BTN_SWITCH_ID);
+
     btn_register_press_listener(counter_btn, on_counter_btn_pressed);
     btn_register_press_listener(switch_btn, on_switch_btn_pressed);
 }
 
 void main(void)
 {
+    hw_init();
     leds_init_and_set();
     btns_init_and_set_callbacks();
 
