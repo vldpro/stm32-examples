@@ -41,6 +41,13 @@ Simply open the ioc file with STM32CubeMX
 - `entrypoint` - source file with main logic and `main()` function
     - Src/entrypoint.c
 
+- `hardware_init` - initialize microcontoller's hardware
+    - Inc/hardware_init.h
+    - Src/hardware_init.c
+
+- `initial_data` - header with initial data structures for drivers
+    - Inc/initial_data.h
+
 All other sources/headers was generate by STM32CubeMX
 
 ## Pins-LEDs mapping (STM32F303ZETx)
