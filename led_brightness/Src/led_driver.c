@@ -47,22 +47,6 @@ struct leds_list {
 
 // Private functions
 
-static void init_hal(void)
-{
-    HAL_Init();
-    SystemClock_Config();
-}
-
-static void init_components(void)
-{
-    MX_GPIO_Init();
-    MX_RTC_Init();
-    MX_USART3_UART_Init();
-    MX_USB_PCD_Init();
-    MX_TIM4_Init();
-    MX_TIM2_Init();
-}
-
 static void start_pwm_tim(TIM_HandleTypeDef *tim)
 {
     HAL_TIM_PWM_Start(tim, TIM_CHANNEL_1);
@@ -125,8 +109,6 @@ static void timer_set_ccr(TIM_HandleTypeDef *tim, char chan, int ccr_value)
 
 void leds_driver_init(void)
 {
-    init_hal();
-    init_components();
     start_pwm();
 }
 
