@@ -83,8 +83,9 @@ static void on_counter_btn_pressed(void)
 
 static void leds_init_and_set(void)
 {
-    leds_driver_init();
-    module_scope.leds = leds_new();
+    leds_initial_t *init_data = hw_leds_initial_data();
+    leds_driver_init(init_data);
+    module_scope.leds = leds_get();
 }
 
 static void btns_init_and_set_callbacks(void)
