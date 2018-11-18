@@ -1,12 +1,18 @@
 #include "btns_driver.h"
 #include "stm32f3xx_hal.h"
+#include "initial_data.h"
 #include <malloc.h>
 
 #define AVAILABLE_BTNS 2
 #define TICKS_TRESHOLD 50
 
 // Public structures implementation
-#define BTN_DEFAULT (btn_t){ .pin = 0, .port = NULL, .handler = NULL, .ticks = 0 }
+#define BTN_DEFAULT                                                            \
+    (btn_t)                                                                    \
+    {                                                                          \
+        .pin = 0, .port = NULL, .handler = NULL, .ticks = 0                    \
+    }
+
 struct btn {
     uint16_t pin;
     GPIO_TypeDef *port;
@@ -16,7 +22,11 @@ struct btn {
 
 // Private structs impl
 
-#define BTNS_LIST_DEFAULT { .btns = NULL, .sz = 0 }
+#define BTNS_LIST_DEFAULT                                                      \
+    {                                                                          \
+        .btns = NULL, .sz = 0                                                  \
+    }
+
 typedef struct btns_list btns_list_t;
 struct btns_list {
     btn_t *btns;
@@ -57,17 +67,21 @@ void HAL_SYSTICK_Callback(void)
 
 // Public functions
 
-void btns_init(void)
+void btns_init(struct btns_initial *initial_data)
 {
-    driver_scope.btns_list.btns = malloc(sizeof(btn_t) * AVAILABLE_BTNS);
-    driver_scope.btns_list.btns[0] = (btn_t){
-        .port = GPIOA, .pin = GPIO_PIN_10, .handler = NULL, .ticks = 0
-    };
-    driver_scope.btns_list.btns[1] = (btn_t){
-        .port = GPIOC, .pin = GPIO_PIN_13, .handler = NULL, .ticks = 0
-    };
+    uint32_t sz = initial_data->sz;
+    driver_scope.btns_list.btns = malloc(sizeof(btn_t) * sz);
 
-    driver_scope.btns_list.sz = AVAILABLE_BTNS;
+    for (uint32_t i = 0; i < sz; i++) {
+        btn_initial_t init = initial_data->btns_inits[i];
+        driver_scope.btns_list.btns[i] =
+            (btn_t){ .port = (GPIO_TypeDef *)init.port,
+                     .pin = init.pin,
+                     .handler = NULL,
+                     .ticks = 0 };
+    }
+
+    driver_scope.btns_list.sz = sz;
 }
 
 void btns_deinit(void)

@@ -3,13 +3,14 @@
 
 typedef struct btn btn_t;
 typedef void (*btn_pushed_fn)(void);
+struct btns_initial;
 
 /**
  * @brief 
  * 
  * @return btns_list_t* 
  */
-void btns_init(void);
+void btns_init(struct btns_initial *initial_data);
 
 /**
  * @brief 
