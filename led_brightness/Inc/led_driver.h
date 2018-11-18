@@ -16,6 +16,12 @@ typedef struct leds_list leds_list_t;
 typedef void(led_handler_fn)(led_t *);
 
 /**
+ * @brief Intialize the leds hardware
+ * 
+ */
+void leds_driver_init(void);
+
+/**
  * @brief Initialize led_list and driver
  * @param leds
  */
