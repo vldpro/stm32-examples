@@ -112,7 +112,7 @@ static void timer_set_ccr(TIM_HandleTypeDef *tim, char chan, int ccr_value)
 
 // Public functions implementation
 
-void leds_driver_init(struct led_initial *init_data)
+void leds_driver_init(struct leds_initial *init_data)
 {
     start_pwm(init_data);
     init_leds(&(driver_scope.leds_list), init_data);
