@@ -1,13 +1,21 @@
 #include "hardware_init.h"
 #include "stm32f3xx_hal.h"
+#include "rtc.h"
+#include "tim.h"
+#include "usart.h"
+#include "usb.h"
+#include "gpio.h"
+#include "utils.h"
 #include <malloc.h>
 
 #define HW_AVAILABLE_BTNS 2
+#define HW_AVAILABLE_TIMS 2
 
 // Module's private data
 
 static struct {
     btns_initial_t btns_initial;
+    leds_initial_t leds_initial;
 } drivers_initial_data;
 
 // Module's private functions
@@ -40,6 +48,17 @@ static void init_btns(void)
         (btn_initial_t){ .port = GPIOC, .pin = GPIO_PIN_13 };
 
     btns_initial->sz = HW_AVAILABLE_BTNS;
+}
+
+static void init_leds(void)
+{
+    TIM_HandleTypeDef **tims =
+        malloc(HW_AVAILABLE_TIMS * sizeof(TIM_HandleTypeDef *));
+    tims[0] = &htim4;
+    tims[1] = &htim2;
+
+    drivers_initial_data.leds_initial =
+        (leds_initial_t){ .tims = (void *)tims, .sz = HW_AVAILABLE_TIMS };
 }
 
 // Module's public functions
