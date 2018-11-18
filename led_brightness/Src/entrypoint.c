@@ -113,6 +113,7 @@ static void brightness_animation_view(leds_list_t *leds)
 
 void main(void)
 {
+    leds_driver_init();
     module_scope.leds = leds_new();
 
     for (;;) {
