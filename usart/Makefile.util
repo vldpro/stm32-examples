@@ -1,0 +1,5 @@
+build-proj:
+	./build.sh
+
+flash: build-proj
+	./flash.sh
