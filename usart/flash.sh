@@ -1,5 +1,11 @@
-if [ -x "$(which st-flash)" ]; then
-    st-flash write build/*.bin 0x8000000 
+flash() {
+    ./stlink/build/Release/st-flash write ${PWD}/build/*.bin 0x8000000
+}
+
+if [ -x "./stlink/build/Release/st-flash" ]; then
+    flash
+elif [ -f "./stlink/Makefile" ]; then
+    cd ./stlink/ && make -j4 release && cd - && flash
 else
-    echo "ERR: st-flash is not installed. Check README steps." >&2
+    echo "ERR: stlink is updated as submodule . Check README steps." >&2
 fi
