@@ -6,7 +6,9 @@
 ### Prerequirements
 
 - Docker
-- st-link
+- cmake
+- build-essential
+- libusb-1.0.0-dev
 
 ### Build 
 
@@ -17,7 +19,7 @@ make -f Makefile.util build-proj
 ### Flash
 Connect your device via USB and:
 ```
-make -f Makefile.util flash
+sudo make -f Makefile.util flash
 ```
 
 ### STM32CubeMX
