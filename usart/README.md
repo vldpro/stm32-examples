@@ -26,6 +26,13 @@ sudo make -f Makefile.util flash
 
 Simply open the ioc file with STM32CubeMX
 
+## Pins Mapping
+
+| Pin  | Descr   |
+| ---- | ------- |
+| PC10 | UART_TX |
+| PC11 | UART_RX |
+
 ## Docs and specs for STM32F303ZE
 
 - About USART. User [manual](https://www.st.com/content/ccc/resource/technical/document/reference_manual/4a/19/6e/18/9d/92/43/32/DM00043574.pdf/files/DM00043574.pdf/jcr:content/translations/en.DM00043574.pdf)
