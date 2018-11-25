@@ -33,3 +33,4 @@ Simply open the ioc file with STM32CubeMX
 
 - Articles
     - HAL USART [here](https://visualgdb.com/tutorials/arm/stm32/uart/)
+    - http://www.rotr.info/electronics/mcu/arm_usart.htm
