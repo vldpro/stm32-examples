@@ -82,21 +82,16 @@ void iuart_init(void)
 
 void iuart_transmit(uint8_t val)
 {
-    /* disable interrupts before modifying the fifo */
-
-    uint8_t fifo_was_empty = fifo_is_empty(&mod_scope.wfifo);
     fifo_push_back(&mod_scope.wfifo, val);
-
-    /* enable interrupts again */
     __HAL_UART_ENABLE_IT(&huart4, UART_IT_TXE);
 }
 
-int8_t iuart_receive(uint8_t *buf)
+iuart_res_t iuart_receive(uint8_t *buf)
 {
     if (fifo_is_empty(&mod_scope.rfifo))
-        return -1;
+        return IUART_NO_DATA;
     *buf = fifo_pop_front(&mod_scope.rfifo);
-    return 0;
+    return IUART_SUCCESS;
 }
 
 void uart_interrupt_handler(UART_HandleTypeDef *huart)

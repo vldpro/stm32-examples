@@ -25,7 +25,7 @@ void main(void)
     uint8_t ch = 'e';
 
     for (;;) {
-        while (iuart_receive(&ch) == -1)
+        while (iuart_receive(&ch) == IUART_NO_DATA)
             ;
         iuart_transmit(ch);
         long long unsigned int i = 300;
