@@ -18,7 +18,9 @@ void main(void)
     MX_UART4_Init();
 
     iuart_init();
-    iuart_transmit(g_char);
+    iuart_transmit('c');
+    iuart_transmit('b');
+    iuart_transmit('a');
 
     for (;;) {
         //HAL_UART_Transmit(&huart4, &buffer, sizeof(buffer), HAL_MAX_DELAY);

@@ -53,14 +53,14 @@ static void fifo_push_back(fifo_t *fifo, uint8_t val)
 {
     fifo->data[fifo->woff] = val;
     fifo->woff++;
-    fifo->woff &= fifo->cap; // prevent buffer overflow
+    fifo->woff = fifo->woff % fifo->cap; // prevent buffer overflow
 }
 
 static uint8_t fifo_pop_front(fifo_t *fifo)
 {
     uint8_t res = fifo->data[fifo->roff];
     fifo->roff++;
-    fifo->roff &= fifo->cap; // prevent buffer overflow
+    fifo->roff = fifo->roff % fifo->cap; // prevent buffer overflow
     return res;
 }
 
@@ -82,9 +82,14 @@ void iuart_init(void)
 
 void iuart_transmit(uint8_t val)
 {
-    if (fifo_is_empty(&mod_scope.wfifo))
-        __HAL_UART_ENABLE_IT(&huart4, UART_IT_TXE);
+    /* disable interrupts before modifying the fifo */
+    __HAL_UART_DISABLE_IT(&huart4, UART_IT_TXE);
+
+    uint8_t fifo_was_empty = fifo_is_empty(&mod_scope.wfifo);
     fifo_push_back(&mod_scope.wfifo, val);
+
+    /* enable interrupts again */
+    __HAL_UART_ENABLE_IT(&huart4, UART_IT_TXE);
 }
 
 void iuart_receive(uint8_t *buf)
@@ -96,13 +101,11 @@ void iuart_receive(uint8_t *buf)
 
 void uart_interrupt_handler(UART_HandleTypeDef *huart)
 {
-    if (__HAL_UART_GET_IT_SOURCE(huart, UART_IT_TXE) != RESET) {
-        if (fifo_is_empty(&mod_scope.wfifo)) {
-            __HAL_UART_DISABLE_IT(huart, UART_IT_TXE);
+    if (__HAL_UART_GET_IT(huart, UART_IT_TXE) != RESET) {
+        if (fifo_is_empty(&mod_scope.wfifo))
             return;
-        }
 
-        int8_t byte = fifo_pop_front(&mod_scope.wfifo);
+        uint8_t byte = fifo_pop_front(&mod_scope.wfifo);
         huart->Instance->TDR = byte;
     }
 }
