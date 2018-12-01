@@ -22,8 +22,16 @@ void main(void)
     iuart_transmit('b');
     iuart_transmit('a');
 
+    uint8_t ch = 'e';
+
     for (;;) {
-        //HAL_UART_Transmit(&huart4, &buffer, sizeof(buffer), HAL_MAX_DELAY);
-        HAL_Delay(100);
+        while (iuart_receive(&ch) == -1)
+            ;
+        iuart_transmit(ch);
+        long long unsigned int i = 300;
+        for (;;) {
+            if (!(i--))
+                break;
+        }
     }
 }

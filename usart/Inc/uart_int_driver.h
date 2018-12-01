@@ -6,6 +6,6 @@
 void iuart_init(void);
 
 void iuart_transmit(uint8_t val);
-void iuart_receive(uint8_t *val);
+int8_t iuart_receive(uint8_t *val);
 
 #endif

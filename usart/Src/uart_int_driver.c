@@ -12,7 +12,7 @@
 // Temporary globals
 //
 
-#define BUF_SZ 256
+#define BUF_SZ 4096
 static uint8_t g_rbuf[BUF_SZ] = { 0 };
 static uint8_t g_wbuf[BUF_SZ] = { 0 };
 
@@ -83,7 +83,6 @@ void iuart_init(void)
 void iuart_transmit(uint8_t val)
 {
     /* disable interrupts before modifying the fifo */
-    __HAL_UART_DISABLE_IT(&huart4, UART_IT_TXE);
 
     uint8_t fifo_was_empty = fifo_is_empty(&mod_scope.wfifo);
     fifo_push_back(&mod_scope.wfifo, val);
@@ -92,20 +91,27 @@ void iuart_transmit(uint8_t val)
     __HAL_UART_ENABLE_IT(&huart4, UART_IT_TXE);
 }
 
-void iuart_receive(uint8_t *buf)
+int8_t iuart_receive(uint8_t *buf)
 {
     if (fifo_is_empty(&mod_scope.rfifo))
-        return;
+        return -1;
     *buf = fifo_pop_front(&mod_scope.rfifo);
+    return 0;
 }
 
 void uart_interrupt_handler(UART_HandleTypeDef *huart)
 {
-    if (__HAL_UART_GET_IT(huart, UART_IT_TXE) != RESET) {
-        if (fifo_is_empty(&mod_scope.wfifo))
-            return;
+    if (__HAL_UART_GET_IT(huart, UART_IT_TXE) != RESET)
+        if (!fifo_is_empty(&mod_scope.wfifo)) {
+            uint8_t byte = fifo_pop_front(&mod_scope.wfifo);
+            huart->Instance->TDR = byte;
+        } else {
+            __HAL_UART_DISABLE_IT(&huart4, UART_IT_TXE);
+        }
 
-        uint8_t byte = fifo_pop_front(&mod_scope.wfifo);
-        huart->Instance->TDR = byte;
+    if (__HAL_UART_GET_IT(huart, UART_IT_RXNE) != RESET) {
+        uint8_t byte = (huart->Instance->RDR & (uint16_t)0x00FF);
+        fifo_push_back(&mod_scope.rfifo, byte);
+        __HAL_UART_SEND_REQ(huart, UART_RXDATA_FLUSH_REQUEST);
     }
 }
