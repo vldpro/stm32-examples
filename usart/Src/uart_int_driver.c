@@ -14,7 +14,7 @@
 // Temporary globals
 //
 
-#define BUF_SZ 2
+#define BUF_SZ 1024
 static uint8_t g_rbuf[BUF_SZ] = { 0 };
 static uint8_t g_wbuf[BUF_SZ] = { 0 };
 
@@ -48,10 +48,8 @@ void iuart_init(void)
 iuart_res_t iuart_transmit(uint8_t val)
 {
     fifo_res_t res = fifo_push_back(&mod_scope.wfifo, val);
-    if (res == FIFO_FULL) {
-        huart4.Instance->TDR = 'f';
+    if (res == FIFO_FULL)
         return IUART_BUF_FULL;
-    }
     __HAL_UART_ENABLE_IT(&huart4, UART_IT_TXE);
     return IUART_SUCCESS;
 }
