@@ -67,7 +67,8 @@ Src/system_stm32f3xx.c \
 Src/entrypoint.c \
 Src/uart_int_driver.c \
 Src/hw_init.c \
-Src/uart_poll_driver.c
+Src/uart_poll_driver.c \
+Src/convertors.c
 
 # ASM sources
 ASM_SOURCES =  \
