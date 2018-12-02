@@ -3,12 +3,13 @@
 
 ## How to build  and flash
 
-### Prerequirements
+### Requirements
 
 - docker
 - cmake 
 - build-essential
 - libusb-1.0.0-dev
+- putty
 
 ### Build 
 
