@@ -26,6 +26,23 @@ sudo make -f Makefile.util flash
 
 Simply open the ioc file with STM32CubeMX
 
+## Structure
+- UART Polling driver
+    - `Inc/uart_poll_driver.h`
+    - `Src/uart_poll_driver.c`
+- UART iterrupt driver
+    - `Inc/uart_int_driver.h`
+    - `Src/uart_int_driver.c`
+- Hardware initialization
+    - `Inc/hw_init.h`
+    - `Src/hw_init.c`
+- FIFO (Cyclic buffer with fixed size)
+    - `Inc/fifo.h`
+- Utils (read/write line, etc)
+    - `Inc/utils.h`
+- Main function
+    - `Src/entrypoint.c`
+
 ## Pins Mapping
 
 | Pin  | Descr   |
