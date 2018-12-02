@@ -8,11 +8,11 @@ typedef struct res_buf {
     uint32_t const sz;
 } res_buf_t;
 
-int8_t is_cyrillic(char c);
-int8_t is_latin(char c);
-res_buf_t to_triple(char c);
+int8_t is_cyrillic(uint8_t c);
+int8_t is_latin(uint8_t c);
+res_buf_t to_triple(uint8_t c);
 
-char to_lower(char c);
-char to_upper(char c);
+uint8_t to_lower(uint8_t c);
+uint8_t to_upper(uint8_t c);
 
 #endif

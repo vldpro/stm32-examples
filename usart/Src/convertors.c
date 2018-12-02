@@ -10,7 +10,7 @@ static struct mod_scope {
 // Private functions
 //
 
-static int8_t is_upper(char c)
+static int8_t is_upper(uint8_t c)
 {
     return is_cyrillic(c) ? c >= 192 && c <= 223 : c >= 65 && c <= 90;
 }
@@ -19,17 +19,17 @@ static int8_t is_upper(char c)
 // Public functions
 //
 
-int8_t is_cyrillic(char c)
+int8_t is_cyrillic(uint8_t c)
 {
     return c >= 192;
 }
 
-int8_t is_latin(char c)
+int8_t is_latin(uint8_t c)
 {
-    return c >= 97 && c <= 122 || c >= 65 && c <= 90;
+    return (c >= 97 && c <= 122) || (c >= 65 && c <= 90);
 }
 
-char to_lower(char c)
+uint8_t to_lower(uint8_t c)
 {
     if (!is_upper(c))
         return c;
@@ -37,7 +37,7 @@ char to_lower(char c)
         return c + 32;
 }
 
-char to_upper(char c)
+uint8_t to_upper(uint8_t c)
 {
     if (is_upper(c))
         return c;
@@ -45,7 +45,7 @@ char to_upper(char c)
         return c - 32;
 }
 
-res_buf_t to_triple(char c)
+res_buf_t to_triple(uint8_t c)
 {
     uint8_t i;
     for (i = 0; i < 3; i++)
