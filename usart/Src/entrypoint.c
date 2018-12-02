@@ -1,12 +1,20 @@
 #include "hw_init.h"
 #include "uart_int_driver.h"
 #include "uart_poll_driver.h"
+
+#include "led_driver.h"
+#include "btns_driver.h"
+
 #include "convertors.h"
 #include "utils.h"
 
 #define ERR_MSG_INVALID_NUM "Invalid number: Number should be between 0 and 255"
 #define ERR_MSG_NAN "NaN"
 #define IN_BUFFER_SIZE 1024
+
+//
+// Module's data
+//
 
 //
 // Helpers
@@ -58,13 +66,21 @@ static void mode_decimal_to_binary_conveter(void)
     }
 
     res_buf_t bin = to_binary(num);
+    leds_display_number(leds_get(), num);
     puart_transmit_line(bin.data, bin.sz);
+}
+
+static void init_drivers(void)
+{
+    leds_driver_init(hw_leds_initial_data());
+    btns_init(hw_btns_initial_data());
+    puart_init();
 }
 
 void main(void)
 {
     hw_init();
-    puart_init();
+    init_drivers();
     //initialize_iuart();
 
     uint8_t ch = 'e';
