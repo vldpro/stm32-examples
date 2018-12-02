@@ -3,11 +3,16 @@
 
 #include "uart_poll_driver.h"
 
-inline void puart_transmit_line(uint8_t const *buf, uint32_t sz)
+inline void puart_transmit_buf(uint8_t const *buf, uint32_t sz)
 {
     uint32_t i;
     for (i = 0; i < sz; i++)
         puart_transmit(buf[i]);
+}
+
+inline void puart_transmit_line(uint8_t const *buf, uint32_t sz)
+{
+    puart_transmit_buf(buf, sz);
     puart_transmit('\r');
 }
 

@@ -8,6 +8,10 @@
 #define ERR_MSG_NAN "NaN"
 #define IN_BUFFER_SIZE 1024
 
+//
+// Helpers
+//
+
 static void initialize_iuart(void)
 {
     iuart_initial_t init = hw_iuart_initial_data();
@@ -24,7 +28,18 @@ static res_buf_t convert_input(uint8_t c)
     return to_triple(res);
 }
 
-static void decimal_to_binary(void)
+//
+// Work Modes
+//
+
+static void mode_latin_cyrillic_converter(void)
+{
+    uint8_t ch = puart_receive();
+    res_buf_t res = convert_input(ch);
+    puart_transmit_buf(res.data, res.sz);
+}
+
+static void mode_decimal_to_binary_conveter(void)
 {
     static uint8_t in_buffer[IN_BUFFER_SIZE];
 
@@ -55,7 +70,7 @@ void main(void)
     uint8_t ch = 'e';
 
     for (;;) {
-        decimal_to_binary();
+        mode_decimal_to_binary_conveter();
         /*while (iuart_receive(&ch) == IUART_NO_DATA)
             ;
         while (iuart_transmit(ch) == IUART_BUF_FULL)
