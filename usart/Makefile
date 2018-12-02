@@ -69,6 +69,8 @@ Src/uart_int_driver.c \
 Src/hw_init.c \
 Src/uart_poll_driver.c \
 Src/convertors.c \
+Src/led_driver.c \
+Src/btns_driver.c \
 Src/tim.c
 
 # ASM sources
@@ -144,7 +146,7 @@ endif
 
 
 # Generate dependency information
-CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -std=c99
 
 
 #######################################

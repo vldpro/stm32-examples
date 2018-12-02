@@ -3,6 +3,11 @@
 
 #include "uart_poll_driver.h"
 
+inline int bit_at(unsigned char bitset, unsigned int i)
+{
+    return (bitset >> i) & 0x01;
+}
+
 inline void puart_transmit_buf(uint8_t const *buf, uint32_t sz)
 {
     uint32_t i;
