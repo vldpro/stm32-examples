@@ -11,7 +11,7 @@ typedef enum iuart_io_res {
 
 void iuart_init(void);
 
-void iuart_transmit(uint8_t val);
+iuart_res_t iuart_transmit(uint8_t val);
 iuart_res_t iuart_receive(uint8_t *val);
 
 #endif

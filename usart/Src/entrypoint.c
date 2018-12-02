@@ -27,11 +27,12 @@ void main(void)
     for (;;) {
         while (iuart_receive(&ch) == IUART_NO_DATA)
             ;
-        iuart_transmit(ch);
-        long long unsigned int i = 300;
+        while (iuart_transmit(ch) == IUART_BUF_FULL)
+            ;
+        /*long long unsigned int i = 1000;
         for (;;) {
             if (!(i--))
                 break;
-        }
+        }*/
     }
 }

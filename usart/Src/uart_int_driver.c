@@ -8,11 +8,13 @@
 #include "usb.h"
 #include "usart.h"
 
+#include "fifo.h"
+
 //
 // Temporary globals
 //
 
-#define BUF_SZ 4096
+#define BUF_SZ 2
 static uint8_t g_rbuf[BUF_SZ] = { 0 };
 static uint8_t g_wbuf[BUF_SZ] = { 0 };
 
@@ -20,54 +22,17 @@ static uint8_t g_wbuf[BUF_SZ] = { 0 };
 // Module's internal structs
 //
 
-typedef struct fifo {
-    uint8_t *data;
-    uint32_t cap;
-    uint32_t roff;
-    uint32_t woff;
-} fifo_t;
-
-#define FIFO_DEFAULT_CONSTRUCTOR()                                             \
-    {                                                                          \
-        .data = NULL, .cap = 0, .roff = 0, .woff = 0                           \
-    }
-
-#define FIFO_CONSTRUCTOR(buf, sz)                                              \
-    {                                                                          \
-        .data = buf, .cap = sz, .roff = 0, .woff = 0                           \
-    }
-
 static struct mod_scope {
     fifo_t wfifo;
     fifo_t rfifo;
 };
 
-struct mod_scope mod_scope = { .wfifo = FIFO_DEFAULT_CONSTRUCTOR(),
-                               .rfifo = FIFO_DEFAULT_CONSTRUCTOR() };
+struct mod_scope mod_scope = { .wfifo = FIFO_INITIAL_DATA,
+                               .rfifo = FIFO_INITIAL_DATA };
 
 //
 // Private functions
 //
-
-static void fifo_push_back(fifo_t *fifo, uint8_t val)
-{
-    fifo->data[fifo->woff] = val;
-    fifo->woff++;
-    fifo->woff = fifo->woff % fifo->cap; // prevent buffer overflow
-}
-
-static uint8_t fifo_pop_front(fifo_t *fifo)
-{
-    uint8_t res = fifo->data[fifo->roff];
-    fifo->roff++;
-    fifo->roff = fifo->roff % fifo->cap; // prevent buffer overflow
-    return res;
-}
-
-static uint8_t fifo_is_empty(fifo_t const *fifo)
-{
-    return fifo->roff == fifo->woff;
-}
 
 //
 // Public functions
@@ -75,30 +40,34 @@ static uint8_t fifo_is_empty(fifo_t const *fifo)
 
 void iuart_init(void)
 {
-    mod_scope = (struct mod_scope){ .rfifo = FIFO_CONSTRUCTOR(g_rbuf, BUF_SZ),
-                                    .wfifo = FIFO_CONSTRUCTOR(g_wbuf, BUF_SZ) };
+    fifo_init(&mod_scope.rfifo, g_rbuf, BUF_SZ);
+    fifo_init(&mod_scope.wfifo, g_wbuf, BUF_SZ);
     __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 }
 
-void iuart_transmit(uint8_t val)
+iuart_res_t iuart_transmit(uint8_t val)
 {
-    fifo_push_back(&mod_scope.wfifo, val);
+    fifo_res_t res = fifo_push_back(&mod_scope.wfifo, val);
+    if (res == FIFO_FULL) {
+        huart4.Instance->TDR = 'f';
+        return IUART_BUF_FULL;
+    }
     __HAL_UART_ENABLE_IT(&huart4, UART_IT_TXE);
+    return IUART_SUCCESS;
 }
 
 iuart_res_t iuart_receive(uint8_t *buf)
 {
-    if (fifo_is_empty(&mod_scope.rfifo))
-        return IUART_NO_DATA;
-    *buf = fifo_pop_front(&mod_scope.rfifo);
-    return IUART_SUCCESS;
+    fifo_res_t res = fifo_pop_front(&mod_scope.rfifo, buf);
+    return res == FIFO_EMPTY ? IUART_NO_DATA : IUART_SUCCESS;
 }
 
 void uart_interrupt_handler(UART_HandleTypeDef *huart)
 {
     if (__HAL_UART_GET_IT(huart, UART_IT_TXE) != RESET)
         if (!fifo_is_empty(&mod_scope.wfifo)) {
-            uint8_t byte = fifo_pop_front(&mod_scope.wfifo);
+            uint8_t byte = 0;
+            fifo_pop_front(&mod_scope.wfifo, &byte);
             huart->Instance->TDR = byte;
         } else {
             __HAL_UART_DISABLE_IT(&huart4, UART_IT_TXE);
