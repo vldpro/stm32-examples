@@ -21,6 +21,11 @@ void hw_init(void)
     MX_USB_PCD_Init();
     MX_UART4_Init();
 
+    hw_disable_uart_interrupts();
+}
+
+void hw_disable_uart_interrupts(void)
+{
     __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
     __HAL_UART_DISABLE_IT(&huart4, UART_IT_TXE);
 }

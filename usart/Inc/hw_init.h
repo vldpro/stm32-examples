@@ -12,6 +12,7 @@ typedef struct iuart_initial {
 } iuart_initial_t;
 
 void hw_init(void);
+void hw_disale_uart_interrupts(void);
 iuart_initial_t hw_iuart_initial_data(void);
 
 #endif
