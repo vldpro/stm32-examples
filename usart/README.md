@@ -1,7 +1,7 @@
 # USART I/O example on stm32
 > USART - PC interconnection
 
-## How to use 
+## How to build  and flash
 
 ### Prerequirements
 
@@ -26,6 +26,37 @@ sudo make -f Makefile.util flash
 
 Simply open the ioc file with STM32CubeMX
 
+## Usage
+
+### With putty
+
+- Connect device to your PC via UART to USB adapter (For example - CP2120)
+- Type:
+```
+$ sudo putty
+```
+
+- Selet *Serial* device
+- Type `/dev/ttyUSB0` with `115200` baudrate
+- Go to *Connection* -> *Serial* and disable *Flow control*
+- Be sure to select *8 data bits* and *1 stop bit* with no *Parity*
+- Press *Open*
+
+### Work Modes
+
+Mode can be switched by ressing a button
+
+#### Decimal to Binary parser
+- Type a decimal number from 0 to 255
+- As a result, you should se the number in binary form in your terminal and leds
+- If you try to type something wrong, mcu should report about error via simple message on terminal
+
+#### Simple ECHO with some transformation
+- Type smth with *latin* script in upper/lower case. 
+  On terminal you should see the same characters only in lower case
+- If you try to type smth in *cyrillic* script, you will see it in lower case only
+
+
 ## Structure
 - UART Polling driver
     - `Inc/uart_poll_driver.h`
@@ -45,10 +76,32 @@ Simply open the ioc file with STM32CubeMX
 
 ## Pins Mapping
 
+### UART
+
 | Pin  | Descr   |
 | ---- | ------- |
 | PC10 | UART_TX |
 | PC11 | UART_RX |
+
+### Leds
+
+| TIMER    | Pin  | LED  |
+| -------- | ---- | ---- |
+| TIM2_CH1 | PA0  | LED1 |
+| TIM2_CH2 | PA1  | LED2 |
+| TIM2_CH3 | PA2  | LED3 |
+| TIM2_CH4 | PA3  | LED4 |
+| TIM4_CH1 | PD12 | LED5 |
+| TIM4_CH2 | PD13 | LED6 |
+| TIM4_CH3 | PD14 | LED7 |
+| TIM4_CH4 | PF6  | LED8 |
+
+### Btns
+
+| Btn name      | Pin  | Desription                      |
+| ------------- | ---- | ------------------------------- |
+| Switch button | PC13 | Switch from one view to another |
+
 
 ## Docs and specs for STM32F303ZE
 
