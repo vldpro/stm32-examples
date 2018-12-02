@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "defines": [
+                "USE_HAL_DRIVER",
+                "STM32F303xE"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "${workspaceRoot}/Inc",
+                "${workspaceRoot}/Drivers/STM32F3xx_HAL_Driver/Inc",
+                "${workspaceRoot}/Drivers/CMSIS/Include",
+                "${workspaceRoot}/Drivers/CMSIS/Device/ST/STM32F3xx/Include"
+            ]
+        }
+    ],
+    "version": 4
+}
