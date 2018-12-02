@@ -1,4 +1,5 @@
 #include "convertors.h"
+#include <math.h>
 
 #define RES_BUF_SZ 128
 
@@ -74,20 +75,20 @@ res_buf_t to_binary(uint8_t num)
     uint8_t const res_buf_sz = 8;
     uint8_t i;
     for (i = 0; i < res_buf_sz; i++)
-        mod_scope.res_buf[i] = bit_at(num, i) ? '1' : '0';
+        mod_scope.res_buf[res_buf_sz - i - 1] = bit_at(num, i) ? '1' : '0';
     return (res_buf_t){ .data = mod_scope.res_buf, .sz = res_buf_sz };
 }
 
 int64_t to_num(uint8_t const *buf, uint32_t sz)
 {
     int64_t res = 0;
-    uint32_t i;
+    int32_t i;
+
     for (i = 0; i < sz; i++) {
         if (!is_digit(buf[i]))
             return -1;
         int8_t num = digit_to_num(buf[i]);
-        int64_t mult = i != (sz - 1) ? 10 * (sz - 1 - i) : 1;
-        res += mult * num;
+        res += pow(10, (sz - 1 - i)) * num;
     }
 
     return res;
