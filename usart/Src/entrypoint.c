@@ -1,26 +1,18 @@
-#include "main.h"
-#include "gpio.h"
-#include "rtc.h"
-#include "usb.h"
-#include "usart.h"
+#include "hw_init.h"
 #include "uart_int_driver.h"
 
 static const uint8_t g_char = 'a';
 
-extern void SystemClock_Config();
+static void initialize_iuart(void)
+{
+    iuart_initial_t init = hw_iuart_initial_data();
+    iuart_init(init.huart, init.rbuf, init.rbuf_sz, init.wbuf, init.wbuf_sz);
+}
 
 void main(void)
 {
-    SystemClock_Config();
-    MX_GPIO_Init();
-    MX_RTC_Init();
-    MX_USB_PCD_Init();
-    MX_UART4_Init();
-
-    iuart_init();
-    iuart_transmit('c');
-    iuart_transmit('b');
-    iuart_transmit('a');
+    hw_init();
+    initialize_iuart();
 
     uint8_t ch = 'e';
 
@@ -29,10 +21,5 @@ void main(void)
             ;
         while (iuart_transmit(ch) == IUART_BUF_FULL)
             ;
-        /*long long unsigned int i = 1000;
-        for (;;) {
-            if (!(i--))
-                break;
-        }*/
     }
 }
