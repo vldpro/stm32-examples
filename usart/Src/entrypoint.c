@@ -1,5 +1,6 @@
 #include "hw_init.h"
 #include "uart_int_driver.h"
+#include "uart_poll_driver.h"
 
 static const uint8_t g_char = 'a';
 
@@ -12,14 +13,17 @@ static void initialize_iuart(void)
 void main(void)
 {
     hw_init();
-    initialize_iuart();
+    puart_init();
+    //initialize_iuart();
 
     uint8_t ch = 'e';
 
     for (;;) {
-        while (iuart_receive(&ch) == IUART_NO_DATA)
+        ch = puart_receive();
+        puart_transmit(ch);
+        /*while (iuart_receive(&ch) == IUART_NO_DATA)
             ;
         while (iuart_transmit(ch) == IUART_BUF_FULL)
-            ;
+            ;*/
     }
 }

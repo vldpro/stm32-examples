@@ -20,6 +20,9 @@ void hw_init(void)
     MX_RTC_Init();
     MX_USB_PCD_Init();
     MX_UART4_Init();
+
+    __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
+    __HAL_UART_DISABLE_IT(&huart4, UART_IT_TXE);
 }
 
 iuart_initial_t hw_iuart_initial_data(void)

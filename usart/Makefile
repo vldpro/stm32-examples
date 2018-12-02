@@ -66,7 +66,8 @@ Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c \
 Src/system_stm32f3xx.c \
 Src/entrypoint.c \
 Src/uart_int_driver.c \
-Src/hw_init.c
+Src/hw_init.c \
+Src/uart_poll_driver.c
 
 # ASM sources
 ASM_SOURCES =  \
