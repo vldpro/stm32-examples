@@ -26,14 +26,50 @@ static void initialize_iuart(void)
     iuart_init(init.huart, init.rbuf, init.rbuf_sz, init.wbuf, init.wbuf_sz);
 }
 
-static res_buf_t convert_input(uint8_t c)
+union my_char {
+    uint8_t c[2];
+    uint16_t utf8_ch;
+};
+
+static void convert_input(void)
 {
-    uint8_t res = c;
-    if (is_cyrillic(c))
-        res = to_upper(c);
-    if (is_latin(c))
-        res = to_lower(c);
-    return to_triple(res);
+    uint8_t c = puart_receive();
+
+    if (c <= 127 && is_latin(c)) {
+        c = to_lower(c);
+        puart_transmit(c);
+        puart_transmit(c);
+        puart_transmit(c);
+    } else {
+        uint8_t c2 = puart_receive();
+        union my_char ch;
+        ch.c[0] = c2;
+        ch.c[1] = c;
+        /*if ((ch.c[0] == 0xD0 && ch.c[1] >= 0xB0) ||
+            (ch.c[0] == 0xD1 && ch.c[1] >= 0x80))
+            ch.c[1] -= 32;*/
+
+        ch.utf8_ch = cyrrillic_to_upper(ch.utf8_ch);
+        puart_transmit(ch.c[0]);
+        puart_transmit(ch.c[1]);
+
+        puart_transmit(ch.c[0]);
+        puart_transmit(ch.c[1]);
+
+        puart_transmit(ch.c[0]);
+        puart_transmit(ch.c[1]);
+        //uint16_t res = ((uint16_t)c) << 8 + c2;
+
+        /*
+        puart_transmit((uint8_t)(res >> 8));
+        puart_transmit((uint8_t)(res & 0x00FF));
+
+        puart_transmit((uint8_t)(res >> 8));
+        puart_transmit((uint8_t)(res & 0x00FF));
+
+        puart_transmit((uint8_t)(res >> 8));
+        puart_transmit((uint8_t)(res & 0x00FF));*/
+    }
 }
 
 //
@@ -42,9 +78,8 @@ static res_buf_t convert_input(uint8_t c)
 
 static void mode_latin_cyrillic_converter(void)
 {
-    uint8_t ch = puart_receive();
-    res_buf_t res = convert_input(ch);
-    puart_transmit_buf(res.data, res.sz);
+    convert_input();
+    //puart_transmit_buf(res.data, res.sz);
 }
 
 static void mode_decimal_to_binary_conveter(void)
@@ -86,7 +121,8 @@ void main(void)
     uint8_t ch = 'e';
 
     for (;;) {
-        mode_decimal_to_binary_conveter();
+        mode_latin_cyrillic_converter();
+        //mode_decimal_to_binary_conveter();
         /*while (iuart_receive(&ch) == IUART_NO_DATA)
             ;
         while (iuart_transmit(ch) == IUART_BUF_FULL)

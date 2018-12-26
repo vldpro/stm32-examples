@@ -17,4 +17,13 @@ int64_t to_num(uint8_t const *buf, uint32_t num);
 uint8_t to_lower(uint8_t c);
 uint8_t to_upper(uint8_t c);
 
+inline uint16_t cyrrillic_to_upper(uint16_t c)
+{
+    if (c >= 0xD0B0 && c <= 0xD0BF)
+        return c - 0xD0B0 + 0xD090;
+    else if (c >= 0xD180 && c <= 0xD18f)
+        return (c - 0xD180) + (0xD0BF - 0xD0B0) + 0xD090 + 1;
+    return c;
+}
+
 #endif
