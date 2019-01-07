@@ -4,3 +4,6 @@
 [submodule "led_brightness/stlink"]
 	path = led_brightness/stlink
 	url = git@github.com:texane/stlink.git
+[submodule "rover/stlink"]
+	path = rover/stlink
+	url = git@github.com:texane/stlink.git
