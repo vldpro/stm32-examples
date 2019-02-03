@@ -71,7 +71,9 @@ Src/uart_poll_driver.c \
 Src/convertors.c \
 Src/led_driver.c \
 Src/btns_driver.c \
-Src/tim.c
+Src/tim.c \
+Src/sbus/sbus.c \
+Src/sbus/bitops.c
 
 # ASM sources
 ASM_SOURCES =  \
